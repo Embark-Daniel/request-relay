@@ -36,10 +36,6 @@ app.use((req, res, next) => {
     };
 
     if(!blacklist.includes(req.path)) {
-
-
-        console.log(data);
-
         log.push(data);
         if(log.length > 100) {
             log.shift();
@@ -54,6 +50,8 @@ app.use((req, res, next) => {
     })
     return;
 });
+
+console.log(port);
 
 server.listen(port, () => {
     console.log(`Mock server is running on port ${port}`)
