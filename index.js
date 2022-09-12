@@ -36,6 +36,10 @@ app.use((req, res, next) => {
     };
 
     if(!blacklist.includes(req.path)) {
+
+
+        console.log(data);
+
         log.push(data);
         if(log.length > 100) {
             log.shift();
