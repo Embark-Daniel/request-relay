@@ -2,10 +2,10 @@
   "name": "request-relay",
   "type": "module",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.mjs",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.mjs"
   },
   "dependencies": {
     "chalk": "^5.0.1",
