@@ -84,7 +84,7 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
+        const socket = io("wss://localhost:3000");
         let logs = document.getElementById('logs');
 
         function addLog(log) {
