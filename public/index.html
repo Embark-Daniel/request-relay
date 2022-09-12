@@ -84,7 +84,9 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io();
+        var socket = io('ws://localhost:3000', {
+            transports: ['websocket']
+        });
         var logs = document.getElementById('logs');
 
         function addLog(log) {
