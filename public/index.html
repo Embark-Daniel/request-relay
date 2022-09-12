@@ -38,13 +38,13 @@
 
         #logs .log {
             opacity: 0;
-            padding: 20px;
+            padding: 15px;
             margin: 5px;
             background-color: #333;
             border-radius: 5px;
             transition: all 0.2s;
             font-size: 18px;
-            transform: translateY(-20px);
+            transform: translateY(-20px) scale(0.8);
             color: #FFF;
         }
 
@@ -65,8 +65,10 @@
 
         #logs .log .log__query,
         #logs .log .log__body {
-            font-size: 16px;
+            font-size: 14px;
             color: #AAA;
+            background: #222;
+            padding: 10px;
         }
 
         #logs .log.showing {
@@ -84,7 +86,7 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io("wss://localhost:3000");
+        const socket = io();
         let logs = document.getElementById('logs');
 
         function addLog(log) {
@@ -95,10 +97,10 @@
                 inner += `<div class="log__method">[${log.method}]</div>`;
                 inner += `<div class="log__path">${log.path}</div>`;
                 if(log.query && Object.keys(log.query).length > 0) {
-                    inner += `<div class="log__query">query: ${JSON.stringify(log.query)}</div>`;
+                    inner += `<pre class="log__query">query: ${JSON.stringify(log.query, null, 2)}</pre>`;
                 }
                 if(log.body && Object.keys(log.body).length > 0) {
-                    inner += `<div class="log__body">body: ${JSON.stringify(log.body)}</div>`;
+                    inner += `<pre class="log__body">body: ${JSON.stringify(log.body, null, 2)}</pre>`;
                 }
             inner += `</div>`;
             logs.innerHTML += inner;
@@ -119,7 +121,7 @@
 
         socket.on('log-all', function(data) {
             if(data) {
-                data = data.reverse();
+                // data = data.reverse();
             }
             data.forEach((log, index) => {
                 addLog(log);
