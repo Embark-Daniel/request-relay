@@ -84,8 +84,8 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io('wss://ill-erin-chipmunk-cape.cyclic.app:3000');
-        var logs = document.getElementById('logs');
+        const socket = io();
+        let logs = document.getElementById('logs');
 
         function addLog(log) {
             var inner = ``;
