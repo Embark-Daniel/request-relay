@@ -3,16 +3,133 @@
 
 <head>
     <title>Request Relay</title>
+    <style>
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: sans-serif;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: black;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #logs {
+            font-family: monospace;
+            white-space: pre;
+            min-height: 400px;
+            max-width: 1000px;
+            max-height: 80vh;
+            overflow-y: scroll;
+            width: 80vw;
+        }
+
+        #logs .log {
+            opacity: 0;
+            padding: 20px;
+            margin: 5px;
+            background-color: #333;
+            border-radius: 5px;
+            transition: all 0.2s;
+            font-size: 18px;
+            transform: translateY(-20px);
+            color: #FFF;
+        }
+
+        #logs .log .log__time {
+            font-size: 12px;
+            color: #AAA;
+        }
+
+        #logs .log .log__method {
+            color: rgb(0, 198, 0);
+            margin-right: 10px;
+        }
+
+        #logs .log .log__method,
+        #logs .log .log__path {
+            display: inline;
+        }
+
+        #logs .log .log__query,
+        #logs .log .log__body {
+            font-size: 16px;
+            color: #AAA;
+        }
+
+        #logs .log.showing {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 
 <body>
 
-    Requests will be here
+    <div class="container">
+        <div id="logs"></div>
+    </div>
 
-    <!-- <ul id="messages"></ul>
-    <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Send</button>
-    </form> -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        var logs = document.getElementById('logs');
+
+        function addLog(log) {
+            var inner = ``;
+            log.id = 'id-' + log.time;
+            inner += `<div class="log" data-id="${log.id}">`;
+                inner += `<div class="log__time">${log.time}</div>`;
+                inner += `<div class="log__method">[${log.method}]</div>`;
+                inner += `<div class="log__path">${log.path}</div>`;
+                if(log.query && Object.keys(log.query).length > 0) {
+                    inner += `<div class="log__query">query: ${JSON.stringify(log.query)}</div>`;
+                }
+                if(log.body && Object.keys(log.body).length > 0) {
+                    inner += `<div class="log__body">body: ${JSON.stringify(log.body)}</div>`;
+                }
+            inner += `</div>`;
+            logs.innerHTML += inner;
+
+            var logEl = document.querySelector(`[data-id="${log.id}"]`);
+            logs.scrollTop = logs.scrollHeight;
+            logEl.classList.add('showing');
+
+            if(logs.querySelectorAll('.log').length > 100) {
+                logs.removeChild(logs.querySelector('.log'));
+            }
+        }
+
+
+        socket.on('connect', function() {
+            console.log('Connected to server');
+        });
+
+        socket.on('log-all', function(data) {
+            if(data) {
+                data = data.reverse();
+            }
+            data.forEach((log, index) => {
+                addLog(log);
+            });
+        });
+
+        socket.on('log-new', function(data) {
+            addLog(data);
+        });
+    </script>
 </body>
 
 </html>
